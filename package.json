@@ -1,5 +1,5 @@
 {
-  "name": "chome-dino",
+  "name": "pacman-runner-arcade",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -15,6 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "gh-pages": "^6.3.0",
+    "sass": "^1.100.0",
     "typescript": "^6.0.3",
     "vite": "^8.0.13"
   },

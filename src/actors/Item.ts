@@ -1,5 +1,6 @@
 import { Actor, Engine, Vector, CollisionType } from "excalibur";
 import { Resources } from "../resources";
+import { gameStateManager } from "../managers/GameStateManager";
 
 export type ItemType = "dot" | "power_pill" | "apple" | "strawberry";
 
@@ -12,17 +13,17 @@ export class CollectibleItem extends Actor {
 
     if (type === "dot") {
       size = 10;
-      adjustedY = 290;
+      adjustedY = 690;
     } else if (type === "power_pill") {
       size = 64; // Nog groter! (was 48)
-      adjustedY = 290; // Ligt netjes op de grond (top van grond is 309, 277 + 32 = 309)
+      adjustedY = 677; // Ligt netjes op de grond (top van grond is 709, 709 - 32 = 677)
     } else {
       size = 40; // Fruit 2x groter
-      adjustedY = 290; // Ligt netjes op de grond
+      adjustedY = 689; // Ligt netjes op de grond (top van grond is 709, 709 - 20 = 689)
     }
 
     super({
-      pos: new Vector(900, adjustedY),
+      pos: new Vector(1500, adjustedY),
       width: size,
       height: size,
       collisionType: CollisionType.Passive,
@@ -53,20 +54,18 @@ export class CollectibleItem extends Actor {
 
     this.graphics.use(sprite);
 
-    const game = engine as any;
-    if (game.speed) {
-      this.vel.x = -game.speed;
+    if (gameStateManager.speed) {
+      this.vel.x = -gameStateManager.speed;
     } else {
       this.vel.x = -300;
     }
   }
 
-  update(engine: Engine, delta: number) {
-    super.update(engine, delta);
+  update(engine: Engine, _delta: number) {
+    super.update(engine, _delta);
 
-    const game = engine as any;
-    if (game.speed) {
-      this.vel.x = -game.speed;
+    if (gameStateManager.speed) {
+      this.vel.x = -gameStateManager.speed;
     }
 
     if (this.pos.x < -50) {

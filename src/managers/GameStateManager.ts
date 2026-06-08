@@ -1,4 +1,4 @@
-import { Vector, Actor } from "excalibur";
+import { Vector, Actor, Engine } from "excalibur";
 import { audioManager } from "./AudioManager";
 import { uiManager } from "./UIManager";
 import { Statusbar } from "../actors/Statusbar";
@@ -26,7 +26,7 @@ export class GameStateManager {
 
   public isPowerModeActive: boolean = false;
   private powerModeFramesRemaining: number = 0;
-  private static readonly POWER_MODE_FRAMES = 240; // 4 seconds @ 60fps
+  private static readonly POWER_MODE_FRAMES = 240;
 
   private statusbar: Statusbar | null = null;
   private activeScene: IGameplayScene | null = null;
@@ -73,7 +73,6 @@ export class GameStateManager {
   public update() {
     if (this.isGameOver || this.isIntroPlaying || !this.statusbar) return;
 
-    // Geen delta — fixedUpdateFps = 60, elke frame = 1/60s
     const frameTimeSec = 1 / 60;
 
     // Score stijgt geleidelijk met de tijd
@@ -164,6 +163,22 @@ export class GameStateManager {
         ghost.makeNormal();
       }
     }
+  }
+
+  public gainLife(engine: Engine) {
+    if (this.isGameOver || !this.statusbar) return;
+
+    // Limit maximum hearts to 5 to avoid overlap with score label (at x=200)
+    if (this.lives >= 5) {
+      console.log(
+        "❤️ Maximaal aantal levens (5) bereikt. Geen extra hartje toegevoegd.",
+      );
+      return;
+    }
+
+    const livesCount = this.statusbar.addHeart(engine);
+    this.lives = livesCount;
+    console.log(`❤️ Extra leven gekregen! Levens over: ${livesCount}`);
   }
 
   public loseLife() {

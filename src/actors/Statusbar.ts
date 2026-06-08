@@ -116,4 +116,13 @@ export class Statusbar extends Actor {
     }
     return this.hearts.length;
   }
+
+  addHeart(engine: Engine) {
+    const nextIndex = this.hearts.length;
+    const heart = new Heart(35 + nextIndex * 35, 25);
+    heart.z = 101;
+    this.hearts.push(heart);
+    engine.add(heart);
+    return this.hearts.length;
+  }
 }

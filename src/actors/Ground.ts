@@ -57,13 +57,14 @@ export class Ground extends Actor {
     this.graphics.use(this.sprite);
   }
 
-  update(engine: Engine, _delta: number) {
-    super.update(engine, _delta);
+  update(engine: Engine) {
+    super.update(engine, 1000 / 60);
 
-    // Gebruik geen delta!
-    // Aangezien fixedUpdateFps op 60 staat, is elke frame exact 1/60e van een seconde.
-    if (gameStateManager.speed && !gameStateManager.isIntroPlaying && this.sprite) {
-      // Scroll met exact 100% van de speler snelheid
+    if (
+      gameStateManager.speed &&
+      !gameStateManager.isIntroPlaying &&
+      this.sprite
+    ) {
       const scrollSpeed = gameStateManager.speed / 60;
       this.sprite.sourceView.x += scrollSpeed;
     }

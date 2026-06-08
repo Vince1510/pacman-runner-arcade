@@ -70,7 +70,7 @@ export class GameplayScene extends Scene implements IGameplayScene {
     this.add(this.dotSpawner);
   }
 
-  public onPreUpdate(engine: Engine, _deltaMs: number) {
+  public onPreUpdate(engine: Engine) {
     // Update de state manager
     gameStateManager.update();
 

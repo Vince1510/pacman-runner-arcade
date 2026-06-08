@@ -14,6 +14,7 @@ const Resources = {
   inky: new ImageSource("./images/ghosts/inky.png"),
   clyde: new ImageSource("./images/ghosts/clyde.png"),
   blueGhost: new ImageSource("./images/ghosts/blue_ghost.png"),
+
   heart: new ImageSource("./images/other/heart.png"),
   dot: new ImageSource("./images/other/dot.png"),
   apple: new ImageSource("./images/other/apple.png"),

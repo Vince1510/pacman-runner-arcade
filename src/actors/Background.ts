@@ -30,14 +30,10 @@ export class Background extends Actor {
     this.graphics.use(this.sprite);
   }
 
-  update(engine: Engine, _delta: number) {
-    super.update(engine, _delta);
+  update(engine: Engine) {
+    super.update(engine, 1000 / 60);
 
-    // Gebruik geen delta!
-    // Aangezien fixedUpdateFps op 60 staat, is elke frame exact 1/60e van een seconde.
-    // We scrollen de achtergrond van rechts naar links door de sourceView.x te verhogen.
     if (gameStateManager.speed && !gameStateManager.isIntroPlaying) {
-      // Parallax effect: scrollen met 30% van de speler snelheid
       const scrollSpeed = (gameStateManager.speed * 0.3) / 60;
       this.sprite.sourceView.x += scrollSpeed;
     }

@@ -61,8 +61,8 @@ export class CollectibleItem extends Actor {
     }
   }
 
-  update(engine: Engine, _delta: number) {
-    super.update(engine, _delta);
+  update(engine: Engine) {
+    super.update(engine, 1000 / 60);
 
     if (gameStateManager.speed) {
       this.vel.x = -gameStateManager.speed;

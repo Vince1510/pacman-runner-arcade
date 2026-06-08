@@ -57,8 +57,8 @@ export class Ghost extends Actor {
     this.graphics.use(normalSprite);
   }
 
-  update(engine: Engine, _delta: number) {
-    super.update(engine, _delta);
+  update(engine: Engine) {
+    super.update(engine, 1000 / 60);
 
     // Snelheid dynamisch aanpassen op basis van de gamesnelheid
     if (gameStateManager.speed) {

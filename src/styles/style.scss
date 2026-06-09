@@ -42,8 +42,7 @@ canvas {
 
   .game-over-card {
     background: #1a1a24;
-    border: 2px solid $pink-accent;
-    border-radius: 12px;
+    border: 2px solid $cyan-accent;
     padding: 30px;
     text-align: center;
     width: 90%;
@@ -69,24 +68,17 @@ canvas {
 
 // --- 5. Badges & Buttons ---
 .highscore-badge {
-  background: #ffd700;
-  color: #000;
-  font-weight: bold;
-  padding: 5px 15px;
-  border-radius: 15px;
+  color: #ffd700;
   font-size: 14px;
   margin: 10px 0 20px;
-  display: inline-block;
 }
 
 .retry-btn {
   background: $cyan-accent;
   border: none;
   color: #000;
-  border-radius: 8px;
-  padding: 12px 24px;
+  padding: 10px 20px;
   font-size: 16px;
-  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,4 +91,23 @@ canvas {
     height: 20px;
     fill: currentColor;
   }
+}
+
+.credits-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.made-by-text {
+  font-family: "monospace";
+  font-size: 14px;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+.qr-code-img {
+  width: 100px;
+  height: 100px;
 }

@@ -1,6 +1,5 @@
 import { Actor, Vector, Label, Font, Color, Engine } from "excalibur";
 import { Heart } from "./Heart";
-import { Resources } from "../resources";
 
 export class Statusbar extends Actor {
   private scoreLabel!: Label;
@@ -10,86 +9,36 @@ export class Statusbar extends Actor {
   public hearts: Heart[] = [];
 
   constructor() {
-    super({
-      pos: new Vector(0, 0),
-      anchor: new Vector(0, 0),
-    });
-    this.z = 100;
+    super({ pos: Vector.Zero, anchor: Vector.Zero, z: 100 });
   }
 
   onInitialize(engine: Engine) {
-    // --- GAME BAR BACKGROUND ---
-    const uiBar = new Actor({
-      pos: new Vector(720, 25),
-      width: 1440,
-      height: 50,
-      color: Color.fromHex("#1a1a24"),
-    });
-    uiBar.z = 100;
-    engine.add(uiBar);
-
-    // Voeg 3 hartjes toe voor de levens linksboven
-    for (let i = 0; i < 3; i++) {
-      const heart = new Heart(35 + i * 35, 25);
-      heart.z = 101;
-      this.hearts.push(heart);
-      engine.add(heart);
-    }
-
-    // Score label (x = 200)
-    this.scoreLabel = new Label({
-      text: "SCORE: 0000",
-      pos: new Vector(200, 16),
-      font: new Font({
-        family: "monospace",
-        size: 18,
-        color: Color.White,
+    engine.add(
+      new Actor({
+        pos: new Vector(720, 25),
+        width: 1440,
+        height: 50,
+        color: Color.fromHex("#1a1a24"),
+        z: 100,
       }),
-    });
-    this.scoreLabel.z = 101;
-    engine.add(this.scoreLabel);
+    );
 
-    // Highscore label (x = 360)
-    this.highscoreLabel = new Label({
-      text: "HI: 0000",
-      pos: new Vector(360, 16),
-      font: new Font({
-        family: "monospace",
-        size: 18,
-        color: Color.Yellow,
-      }),
-    });
-    this.highscoreLabel.z = 101;
-    engine.add(this.highscoreLabel);
+    for (let i = 0; i < 3; i++) this.addHeart(engine);
 
-    // Difficulty label (x = 510)
-    this.difficultyLabel = new Label({
-      text: "EASY",
-      pos: new Vector(510, 16),
-      font: new Font({
-        family: "monospace",
-        size: 18,
-        color: Color.Green,
-      }),
-    });
-    this.difficultyLabel.z = 101;
-    engine.add(this.difficultyLabel);
-
-    // Speed label (x = 640)
-    this.speedLabel = new Label({
-      text: "SPEED: 300",
-      pos: new Vector(640, 16),
-      font: new Font({
-        family: "monospace",
-        size: 18,
-        color: Color.Cyan,
-      }),
-    });
-    this.speedLabel.z = 101;
-    engine.add(this.speedLabel);
+    engine.add(
+      (this.scoreLabel = this.createLabel("SCORE: 0000", 200, Color.White)),
+    );
+    engine.add(
+      (this.highscoreLabel = this.createLabel("HI: 0000", 360, Color.Yellow)),
+    );
+    engine.add(
+      (this.difficultyLabel = this.createLabel("EASY", 510, Color.Green)),
+    );
+    engine.add(
+      (this.speedLabel = this.createLabel("SPEED: 300", 640, Color.Cyan)),
+    );
   }
 
-  /** Roep dit elke frame aan vanuit game.ts om de HUD te updaten */
   updateHud(score: number, highscore: number, speed: number) {
     this.scoreLabel.text = `SCORE: ${Math.floor(score).toString().padStart(4, "0")}`;
     this.highscoreLabel.text = `HI: ${highscore.toString().padStart(4, "0")}`;
@@ -97,32 +46,35 @@ export class Statusbar extends Actor {
   }
 
   setDifficulty(state: "EASY" | "HARD" | "POWER") {
-    if (state === "EASY") {
-      this.difficultyLabel.text = "EASY";
-      this.difficultyLabel.font.color = Color.Green;
-    } else if (state === "HARD") {
-      this.difficultyLabel.text = "HARD";
-      this.difficultyLabel.font.color = Color.Red;
-    } else {
-      this.difficultyLabel.text = "POWER";
-      this.difficultyLabel.font.color = Color.Blue;
-    }
+    const config = {
+      EASY: { text: "EASY", color: Color.Green },
+      HARD: { text: "HARD", color: Color.Red },
+      POWER: { text: "POWER", color: Color.Blue },
+    }[state];
+
+    this.difficultyLabel.text = config.text;
+    this.difficultyLabel.font.color = config.color;
   }
 
   removeHeart() {
-    const heart = this.hearts.pop();
-    if (heart) {
-      heart.kill();
-    }
+    this.hearts.pop()?.kill();
     return this.hearts.length;
   }
 
   addHeart(engine: Engine) {
-    const nextIndex = this.hearts.length;
-    const heart = new Heart(35 + nextIndex * 35, 25);
+    const heart = new Heart(35 + this.hearts.length * 35, 25);
     heart.z = 101;
     this.hearts.push(heart);
     engine.add(heart);
     return this.hearts.length;
+  }
+
+  private createLabel(text: string, xPos: number, color: Color): Label {
+    return new Label({
+      text,
+      pos: new Vector(xPos, 16),
+      z: 101,
+      font: new Font({ family: "monospace", size: 18, color }),
+    });
   }
 }

@@ -1,6 +1,6 @@
 import { Actor, Engine, Vector, CollisionType } from "excalibur";
 import { Resources } from "../resources";
-import { gameStateManager } from "../managers/GameStateManager";
+import { speed, lives } from "../gameState";
 
 export type ItemType = "dot" | "power_pill" | "apple" | "strawberry";
 
@@ -12,14 +12,14 @@ export class CollectibleItem extends Actor {
     let adjustedY = yPos;
 
     if (type === "dot") {
-      size = 10;
+      size = 20;
       adjustedY = 690;
     } else if (type === "power_pill") {
-      size = 64; // Nog groter! (was 48)
-      adjustedY = 677; // Ligt netjes op de grond (top van grond is 709, 709 - 32 = 677)
+      size = 80;
+      adjustedY = 677;
     } else {
-      size = 40; // Fruit 2x groter
-      adjustedY = 689; // Ligt netjes op de grond (top van grond is 709, 709 - 20 = 689)
+      size = 40;
+      adjustedY = 689;
     }
 
     super({
@@ -31,17 +31,16 @@ export class CollectibleItem extends Actor {
     this.itemType = type;
   }
 
-  onInitialize(engine: Engine) {
+  onInitialize(_engine: Engine) {
     let sprite;
-    if (this.itemType === "dot" || this.itemType === "power_pill") {
+    if (this.itemType === "dot") {
       sprite = Resources.dot.toSprite();
-      if (this.itemType === "dot") {
-        sprite.width = 10;
-        sprite.height = 10;
-      } else {
-        sprite.width = 64;
-        sprite.height = 64;
-      }
+      sprite.width = 20;
+      sprite.height = 20;
+    } else if (this.itemType === "power_pill") {
+      sprite = Resources.dot.toSprite();
+      sprite.width = 80;
+      sprite.height = 80;
     } else if (this.itemType === "apple") {
       sprite = Resources.apple.toSprite();
       sprite.width = 40;
@@ -54,18 +53,14 @@ export class CollectibleItem extends Actor {
 
     this.graphics.use(sprite);
 
-    if (gameStateManager.speed) {
-      this.vel.x = -gameStateManager.speed;
-    } else {
-      this.vel.x = -300;
-    }
+    this.vel.x = speed ? -speed : -300;
   }
 
   update(engine: Engine) {
     super.update(engine, 1000 / 60);
 
-    if (gameStateManager.speed) {
-      this.vel.x = -gameStateManager.speed;
+    if (speed) {
+      this.vel.x = -speed;
     }
 
     if (this.pos.x < -50) {

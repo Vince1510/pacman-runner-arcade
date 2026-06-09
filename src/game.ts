@@ -14,7 +14,6 @@ class Game extends Engine {
   }
 
   onInitialize() {
-    // Gameplay scene registreren en laden
     const gameplayScene = new GameplayScene();
     this.add("gameplay", gameplayScene);
     this.goToScene("gameplay");

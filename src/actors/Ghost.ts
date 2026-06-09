@@ -1,73 +1,54 @@
 import { Actor, Engine, Vector, CollisionType } from "excalibur";
 import { Resources } from "../resources";
-import { gameStateManager } from "../managers/GameStateManager";
+import * as state from "../gameState";
 
-// 4 verschillende spookjes
 export type GhostVariant = "blinky" | "pinky" | "inky" | "clyde";
 
 export class Ghost extends Actor {
   private ghostType: "ground" | "air";
   private ghostVariant: GhostVariant;
-  public isBlue: boolean = false;
+  public isBlue = false;
 
   constructor(type: "ground" | "air", variant: GhostVariant) {
     super({
       pos: new Vector(1500, type === "ground" ? 694 : 670),
       width: 30,
       height: 30,
-      // COLLISION TYPE: Passive zodat Excalibur botsingen met de speler registreert
       collisionType: CollisionType.Passive,
     });
     this.ghostType = type;
     this.ghostVariant = variant;
   }
 
-  onInitialize(engine: Engine) {
-    // VARIANT: Als power mode actief is, verander dan direct als een blauw spookje!
-    if (gameStateManager.isPowerModeActive) {
-      this.isBlue = true;
-      const blueSprite = Resources.blueGhost.toSprite();
-      blueSprite.width = 30;
-      blueSprite.height = 30;
-      this.graphics.use(blueSprite);
-    } else {
-      //anders verander weer in random spookje
-      const ghostSprite = Resources[this.ghostVariant].toSprite();
-      ghostSprite.width = 30;
-      ghostSprite.height = 30;
-      this.graphics.use(ghostSprite);
-    }
+  onInitialize(_engine: Engine) {
+    this.isBlue = state.isPowerModeActive;
+    this.setGhostSprite();
 
-    this.vel.x = gameStateManager.speed ? -gameStateManager.speed : -300;
+    this.vel.x = state.speed ? -state.speed : -300;
   }
 
   public makeBlue() {
     this.isBlue = true;
-    const blueSprite = Resources.blueGhost.toSprite();
-    blueSprite.width = 30;
-    blueSprite.height = 30;
-    this.graphics.use(blueSprite);
+    this.setGhostSprite();
   }
 
   public makeNormal() {
     this.isBlue = false;
-    const normalSprite = Resources[this.ghostVariant].toSprite();
-    normalSprite.width = 30;
-    normalSprite.height = 30;
-    this.graphics.use(normalSprite);
+    this.setGhostSprite();
   }
 
-  update(engine: Engine) {
-    super.update(engine, 1000 / 60);
+  update(engine: Engine, delta: number) {
+    super.update(engine, delta);
 
-    // Snelheid dynamisch aanpassen op basis van de gamesnelheid
-    if (gameStateManager.speed) {
-      this.vel.x = -gameStateManager.speed;
-    }
+    if (state.speed) this.vel.x = -state.speed;
+    if (this.pos.x < -50) this.kill();
+  }
 
-    if (this.pos.x < -50) {
-      this.kill();
-      console.log("Ghost verwijderd omdat hij uit beeld is!");
-    }
+  private setGhostSprite() {
+    const resourceName = this.isBlue ? "blueGhost" : this.ghostVariant;
+    const ghostSprite = Resources[resourceName].toSprite();
+    ghostSprite.width = 30;
+    ghostSprite.height = 30;
+    this.graphics.use(ghostSprite);
   }
 }

@@ -22,7 +22,7 @@ export class GameplayScene extends Scene {
     this.add((this.statusbar = new Statusbar()));
 
     this.resetState();
-    Resources.introSound.play();
+    state.setIsAwaitingStart(true);
 
     this.introTimer = new Timer({
       interval: 4200,
@@ -50,10 +50,32 @@ export class GameplayScene extends Scene {
     this.add(this.introTimer);
     this.add(this.ghostSpawner);
     this.add(this.dotSpawner);
-    this.introTimer.start();
   }
 
   public onPreUpdate(engine: Engine) {
+    if (state.isAwaitingStart) {
+      const keyboard = engine.input.keyboard;
+      const pad = (engine as any).mygamepad;
+      let pressed = false;
+
+      if (keyboard.getKeys().length > 0) pressed = true;
+      if (pad) {
+        for (let i = 0; i < 16; i++) {
+          if (pad.isButtonPressed(i)) pressed = true;
+        }
+      }
+
+      if (pressed) {
+        state.setIsAwaitingStart(false);
+        const startScreen = document.getElementById("start-screen-overlay");
+        if (startScreen) startScreen.classList.remove("active");
+        
+        Resources.introSound.play();
+        this.introTimer.start();
+      }
+      return;
+    }
+
     if (state.isGameOver) {
       const pad = (engine as any).mygamepad;
       if (pad) {

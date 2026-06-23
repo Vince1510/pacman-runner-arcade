@@ -8,6 +8,8 @@ export let isPowerModeActive: boolean = false;
 export let currentDifficulty: "EASY" | "HARD" = "EASY";
 export let hasPlayedHighscoreSound: boolean = false;
 
+export let isAwaitingStart: boolean = true;
+
 export function setScore(value: number) {
   score = value;
 }
@@ -34,4 +36,7 @@ export function setCurrentDifficulty(value: "EASY" | "HARD") {
 }
 export function setHasPlayedHighscoreSound(value: boolean) {
   hasPlayedHighscoreSound = value;
+}
+export function setIsAwaitingStart(value: boolean) {
+  isAwaitingStart = value;
 }

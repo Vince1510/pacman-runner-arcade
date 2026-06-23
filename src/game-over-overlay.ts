@@ -18,21 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
     newHighscoreBadge.style.display = isNewHighscore ? "inline-block" : "none";
     gameOverOverlay.classList.add("active");
 
-    let countdown = 4;
     const btnSpan = btnRetry.querySelector("span");
-    if (btnSpan) btnSpan.textContent = `Retry in ${countdown}... `;
-
-    if ((window as any).countdownTimer)
-      clearInterval((window as any).countdownTimer);
-    (window as any).countdownTimer = setInterval(() => {
-      countdown--;
-      if (countdown > 0) {
-        if (btnSpan) btnSpan.textContent = `Retry in ${countdown}... `;
-      } else {
-        clearInterval((window as any).countdownTimer);
-        window.location.reload();
-      }
-    }, 1000);
+    if (btnSpan) btnSpan.textContent = `Press any button to retry`;
   };
 
   btnRetry.addEventListener("click", () => window.location.reload());

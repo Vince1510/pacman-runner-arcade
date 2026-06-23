@@ -6,7 +6,6 @@ import {
   Animation,
   CollisionType,
   CollisionStartEvent,
-  Keys,
   Buttons,
   Axes,
   Shape,
@@ -56,7 +55,6 @@ export class Player extends Actor {
   }
 
   update(engine: Engine) {
-    const keyboard = engine.input.keyboard;
     const pad = (engine as any).mygamepad;
 
     const isJumpingPad =
@@ -68,7 +66,7 @@ export class Player extends Actor {
         pad.isButtonPressed(Buttons.DpadUp) ||
         pad.getAxes(Axes.LeftStickY) < -0.5);
 
-    const isJumping = keyboard.isHeld(Keys.ArrowUp) || isJumpingPad;
+    const isJumping = isJumpingPad;
 
     const isDuckingPad =
       pad &&
@@ -79,7 +77,7 @@ export class Player extends Actor {
         pad.isButtonPressed(Buttons.DpadDown) ||
         pad.getAxes(Axes.LeftStickY) > 0.5);
 
-    const isDucking = keyboard.isHeld(Keys.ArrowDown) || isDuckingPad;
+    const isDucking = isDuckingPad;
 
     const wasOnGround = this.isOnGround;
 

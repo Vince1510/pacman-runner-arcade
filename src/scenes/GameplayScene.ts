@@ -54,11 +54,9 @@ export class GameplayScene extends Scene {
 
   public onPreUpdate(engine: Engine) {
     if (state.isAwaitingStart) {
-      const keyboard = engine.input.keyboard;
       const pad = (engine as any).mygamepad;
       let pressed = false;
 
-      if (keyboard.getKeys().length > 0) pressed = true;
       if (pad) {
         for (let i = 0; i < 16; i++) {
           if (pad.isButtonPressed(i)) pressed = true;

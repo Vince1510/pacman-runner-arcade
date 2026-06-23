@@ -8,8 +8,8 @@ export class Background extends Actor {
   constructor() {
     super({
       pos: Vector.Zero,
-      width: 1440,
-      height: 800,
+      width: 800,
+      height: 500,
       anchor: Vector.Zero,
       z: -1,
     });
@@ -18,7 +18,7 @@ export class Background extends Actor {
   onInitialize(_engine: Engine) {
     this.sprite = Resources.background.toSprite({
       sourceView: { x: 0, y: 0, width: 1440, height: 559 },
-      destSize: { width: 1440, height: 800 },
+      destSize: { width: 800, height: 500 },
     });
 
     this.graphics.use(this.sprite);

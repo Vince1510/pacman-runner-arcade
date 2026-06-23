@@ -11,9 +11,8 @@ export class Ghost extends Actor {
 
   constructor(type: "ground" | "air", variant: GhostVariant) {
     super({
-      pos: new Vector(1500, type === "ground" ? 694 : 670),
-      width: 30,
-      height: 30,
+      pos: new Vector(850, type === "ground" ? 410 : 428),
+      radius: 15,
       collisionType: CollisionType.Passive,
     });
     this.ghostType = type;
@@ -24,7 +23,7 @@ export class Ghost extends Actor {
     this.isBlue = state.isPowerModeActive;
     this.setGhostSprite();
 
-    this.vel.x = state.speed ? -state.speed : -300;
+    this.vel.x = state.speed ? -state.speed : -166;
   }
 
   public makeBlue() {

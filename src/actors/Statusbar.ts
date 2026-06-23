@@ -35,7 +35,7 @@ export class Statusbar extends Actor {
       (this.difficultyLabel = this.createLabel("EASY", 510, Color.Green)),
     );
     engine.add(
-      (this.speedLabel = this.createLabel("SPEED: 300", 640, Color.Cyan)),
+      (this.speedLabel = this.createLabel("SPEED: 166", 640, Color.Cyan)),
     );
   }
 

@@ -28,7 +28,7 @@ export class GameplayScene extends Scene {
       interval: 4200,
       action: () => {
         state.setIsIntroPlaying(false);
-        state.setSpeed(300);
+        state.setSpeed(166);
         this.playMusic(Resources.sireneEasy);
         this.ghostSpawner.start();
         this.dotSpawner.start();
@@ -53,16 +53,26 @@ export class GameplayScene extends Scene {
     this.introTimer.start();
   }
 
-  public onPreUpdate() {
-    if (state.isGameOver || state.isIntroPlaying) return;
+  public onPreUpdate(engine: Engine) {
+    if (state.isGameOver) {
+      const pad = (engine as any).mygamepad;
+      if (pad) {
+        for (let i = 0; i < 16; i++) {
+          if (pad.isButtonPressed(i)) {
+            window.location.reload();
+          }
+        }
+      }
+      return;
+    }
+    if (state.isIntroPlaying) return;
 
     const dt = 1 / 60;
 
     state.setScore(state.score + dt * 10);
 
     if (!state.isPowerModeActive) {
-      const growthFactor = 1 + state.score * 0.0001;
-      state.setSpeed(state.speed + dt * 15 * growthFactor);
+      state.setSpeed(state.speed + dt * 5);
     }
 
     if (
@@ -81,7 +91,7 @@ export class GameplayScene extends Scene {
     this.statusbar.updateHud(state.score, state.highscore, state.speed);
 
     if (!state.isPowerModeActive) {
-      const targetDiff = state.speed >= 600 ? "HARD" : "EASY";
+      const targetDiff = state.speed >= 500 ? "HARD" : "EASY";
 
       if (state.currentDifficulty !== targetDiff) {
         state.setCurrentDifficulty(targetDiff);
@@ -92,10 +102,7 @@ export class GameplayScene extends Scene {
       }
     }
 
-    this.ghostSpawner.interval = Math.max(
-      450,
-      1500 - (state.speed - 300) * 1.4,
-    );
+    this.ghostSpawner.interval = (350 / state.speed) * 1000;
     this.dotSpawner.interval = (100 / state.speed) * 1000;
   }
 

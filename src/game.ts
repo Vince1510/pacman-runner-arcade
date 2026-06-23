@@ -4,12 +4,15 @@ import { GameplayScene } from "./scenes/GameplayScene";
 import "./game-over-overlay";
 
 class Game extends Engine {
+  public mygamepad: any = null;
+
   constructor() {
     super({
-      width: 1440,
-      height: 800,
+      width: 800,
+      height: 500,
       displayMode: DisplayMode.FitScreen,
       fixedUpdateFps: 60,
+      suppressPlayButton: true,
     });
   }
 
@@ -17,6 +20,12 @@ class Game extends Engine {
     const gameplayScene = new GameplayScene();
     this.add("gameplay", gameplayScene);
     this.goToScene("gameplay");
+
+    this.input.gamepads.enabled = true;
+    this.input.gamepads.on("connect", (connectevent: any) => {
+      console.log("gamepad detected");
+      this.mygamepad = connectevent.gamepad;
+    });
   }
 }
 

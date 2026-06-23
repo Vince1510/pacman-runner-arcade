@@ -17,6 +17,22 @@ document.addEventListener("DOMContentLoaded", () => {
     finalScoreVal.textContent = score.toString().padStart(4, "0");
     newHighscoreBadge.style.display = isNewHighscore ? "inline-block" : "none";
     gameOverOverlay.classList.add("active");
+
+    let countdown = 4;
+    const btnSpan = btnRetry.querySelector("span");
+    if (btnSpan) btnSpan.textContent = `Retry in ${countdown}... `;
+
+    if ((window as any).countdownTimer)
+      clearInterval((window as any).countdownTimer);
+    (window as any).countdownTimer = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        if (btnSpan) btnSpan.textContent = `Retry in ${countdown}... `;
+      } else {
+        clearInterval((window as any).countdownTimer);
+        window.location.reload();
+      }
+    }, 1000);
   };
 
   btnRetry.addEventListener("click", () => window.location.reload());

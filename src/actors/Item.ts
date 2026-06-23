@@ -13,17 +13,17 @@ export class CollectibleItem extends Actor {
 
     if (type === "dot") {
       size = 20;
-      adjustedY = 690;
+      adjustedY = 431;
     } else if (type === "power_pill") {
       size = 80;
-      adjustedY = 677;
+      adjustedY = 423;
     } else {
       size = 40;
-      adjustedY = 689;
+      adjustedY = 431;
     }
 
     super({
-      pos: new Vector(1500, adjustedY),
+      pos: new Vector(850, adjustedY),
       width: size,
       height: size,
       collisionType: CollisionType.Passive,
@@ -53,7 +53,7 @@ export class CollectibleItem extends Actor {
 
     this.graphics.use(sprite);
 
-    this.vel.x = speed ? -speed : -300;
+    this.vel.x = speed ? -speed : -166;
   }
 
   update(engine: Engine) {

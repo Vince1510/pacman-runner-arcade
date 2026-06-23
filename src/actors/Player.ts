@@ -7,6 +7,9 @@ import {
   CollisionType,
   CollisionStartEvent,
   Keys,
+  Buttons,
+  Axes,
+  Shape,
 } from "excalibur";
 import { Resources } from "../resources";
 import { Ghost } from "./Ghost";
@@ -22,10 +25,8 @@ export class Player extends Actor {
 
   constructor(scene: GameplayScene) {
     super({
-      pos: new Vector(100, 709),
-      width: 15,
-      height: 15,
-      color: Color.Blue,
+      pos: new Vector(50, 443),
+      collider: Shape.Circle(7.5, new Vector(0, -7.5)),
       anchor: new Vector(0.5, 1),
       scale: new Vector(2, 2),
       collisionType: CollisionType.Active,
@@ -55,24 +56,51 @@ export class Player extends Actor {
   }
 
   update(engine: Engine) {
+    const keyboard = engine.input.keyboard;
+    const pad = (engine as any).mygamepad;
+
+    const isJumpingPad =
+      pad &&
+      (pad.isButtonPressed(Buttons.Face3) ||
+        pad.isButtonPressed(Buttons.Face4) ||
+        pad.isButtonPressed(Buttons.LeftBumper) ||
+        pad.isButtonPressed(Buttons.RightBumper) ||
+        pad.isButtonPressed(Buttons.DpadUp) ||
+        pad.getAxes(Axes.LeftStickY) < -0.5);
+
+    const isJumping = keyboard.isHeld(Keys.ArrowUp) || isJumpingPad;
+
+    const isDuckingPad =
+      pad &&
+      (pad.isButtonPressed(Buttons.Face1) ||
+        pad.isButtonPressed(Buttons.Face2) ||
+        pad.isButtonPressed(Buttons.LeftTrigger) ||
+        pad.isButtonPressed(Buttons.RightTrigger) ||
+        pad.isButtonPressed(Buttons.DpadDown) ||
+        pad.getAxes(Axes.LeftStickY) > 0.5);
+
+    const isDucking = keyboard.isHeld(Keys.ArrowDown) || isDuckingPad;
+
     const wasOnGround = this.isOnGround;
 
-    if (!this.isOnGround) this.vel.y += 40;
-    if (this.pos.y >= 709) {
-      this.pos.y = 709;
+    if (!this.isOnGround) {
+      this.vel.y += isDucking ? 60 : 25;
+    }
+
+    if (this.pos.y >= 443) {
+      this.pos.y = 443;
       this.vel.y = 0;
       this.isOnGround = true;
       if (!wasOnGround) this.landSquashTimer = 10;
     }
 
-    const keyboard = engine.input.keyboard;
-    if (keyboard.isHeld(Keys.ArrowUp) && this.isOnGround) {
-      this.vel.y = -500;
+    if (isJumping && this.isOnGround) {
+      this.vel.y = -360;
       this.isOnGround = false;
       this.landSquashTimer = 0;
     }
 
-    this.handleVisuals(keyboard);
+    this.handleVisuals(isDucking);
   }
 
   private handleGhostCollision(ghost: Ghost) {
@@ -101,10 +129,10 @@ export class Player extends Actor {
     }
   }
 
-  private handleVisuals(keyboard: any) {
+  private handleVisuals(isDucking: boolean) {
     this.rotation = 0;
 
-    if (keyboard.isHeld("ArrowDown")) {
+    if (isDucking) {
       this.scale.setTo(2, 1);
     } else if (!this.isOnGround) {
       const stretch = Math.abs(this.vel.y) * 0.0005;

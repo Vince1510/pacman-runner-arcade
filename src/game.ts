@@ -25,6 +25,13 @@ class Game extends Engine {
     this.input.gamepads.on("connect", (connectevent: any) => {
       console.log("gamepad detected");
       this.mygamepad = connectevent.gamepad;
+      this.mygamepad.on("button", (event: any) => {
+        console.log("Gamepad button pressed:", event.button);
+      });
+    });
+
+    this.input.keyboard.on("press", (event: any) => {
+      console.log("Keyboard button pressed:", event.key);
     });
   }
 }

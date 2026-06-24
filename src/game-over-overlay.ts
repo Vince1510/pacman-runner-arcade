@@ -18,9 +18,31 @@ document.addEventListener("DOMContentLoaded", () => {
     newHighscoreBadge.style.display = isNewHighscore ? "inline-block" : "none";
     gameOverOverlay.classList.add("active");
 
+    (window as any).canRetryGameOver = false;
+
     const btnSpan = btnRetry.querySelector("span");
-    if (btnSpan) btnSpan.textContent = `Press any button to retry`;
+    if (btnSpan) {
+      let timeLeft = 5;
+      btnSpan.textContent = `Please wait ${timeLeft}s...`;
+      
+      const interval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          btnSpan.textContent = `Please wait ${timeLeft}s...`;
+        } else {
+          clearInterval(interval);
+          btnSpan.textContent = `Press any button to retry`;
+          (window as any).canRetryGameOver = true;
+        }
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        (window as any).canRetryGameOver = true;
+      }, 5000);
+    }
   };
 
-  btnRetry.addEventListener("click", () => window.location.reload());
+  btnRetry.addEventListener("click", () => {
+    if ((window as any).canRetryGameOver) window.location.reload();
+  });
 });

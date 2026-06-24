@@ -75,13 +75,20 @@ export class GameplayScene extends Scene {
     }
 
     if (state.isGameOver) {
+      if ((window as any).canRetryGameOver !== true) return;
+
+      let pressed = false;
       const pad = (engine as any).mygamepad;
       if (pad) {
         for (let i = 0; i < 16; i++) {
-          if (pad.isButtonPressed(i)) {
-            window.location.reload();
-          }
+          if (pad.isButtonPressed(i)) pressed = true;
         }
+      }
+      
+      if (engine.input.keyboard.getKeys().length > 0) pressed = true;
+
+      if (pressed) {
+        window.location.reload();
       }
       return;
     }
